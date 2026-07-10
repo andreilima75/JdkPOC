@@ -12,6 +12,7 @@ public class Jdk26Poc {
 
         primitivePatterns();
         http3Client();
+        lazyConstants();
 
     }
 
@@ -49,6 +50,12 @@ public class Jdk26Poc {
         } catch (Exception e) {
             System.out.println("  HTTP demo (network may vary): " + e.getMessage().substring(0, 50));
         }
+        System.out.println();
+    }
+
+    static void lazyConstants() {
+        System.out.println("3. Lazy Constants:");
+        System.out.println("  Lazy constants: JVM treats as final for opts, init on first use.");
         System.out.println();
     }
 }
