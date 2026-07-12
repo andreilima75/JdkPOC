@@ -5,6 +5,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.concurrent.Future;
+import java.util.concurrent.StructuredTaskScope;
 
 public class Jdk26Poc {
 
@@ -13,6 +15,7 @@ public class Jdk26Poc {
         primitivePatterns();
         http3Client();
         lazyConstants();
+        structuredConcurrency();
 
     }
 
@@ -56,6 +59,24 @@ public class Jdk26Poc {
     static void lazyConstants() {
         System.out.println("3. Lazy Constants:");
         System.out.println("  Lazy constants: JVM treats as final for opts, init on first use.");
+        System.out.println();
+    }
+
+    static void structuredConcurrency() throws Exception {
+        System.out.println("4. Structured Concurrency:");
+        try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+            Future<String> task1 = scope.fork(() -> {
+                Thread.sleep(100);
+                return "Result 1";
+            });
+            Future<Integer> task2 = scope.fork(() -> 42);
+
+            scope.join();
+            scope.throwIfFailed();
+
+            System.out.println("  Task1: " + task1.resultNow());
+            System.out.println("  Task2: " + task2.resultNow());
+        }
         System.out.println();
     }
 }
