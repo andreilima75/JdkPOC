@@ -1,5 +1,8 @@
 package org.example;
 
+import jdk.incubator.vector.IntVector;
+import jdk.incubator.vector.VectorSpecies;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -16,6 +19,7 @@ public class Jdk26Poc {
         http3Client();
         lazyConstants();
         structuredConcurrency();
+        vectorApiDemo();
 
     }
 
@@ -76,6 +80,21 @@ public class Jdk26Poc {
 
             System.out.println("  Task1: " + task1.resultNow());
             System.out.println("  Task2: " + task2.resultNow());
+        }
+        System.out.println();
+    }
+
+    static void vectorApiDemo() {
+        System.out.println("5. Vector API (Incubator):");
+        if (VectorSpecies.INT.preferred() != null) {
+            var species = IntVector.SPECIES_PREFERRED;
+            System.out.println("  Preferred vector length: " + species.length() + " ints");
+            var a = IntVector.fromArray(species, new int[]{1,2,3,4}, 0);
+            var b = IntVector.fromArray(species, new int[]{5,6,7,8}, 0);
+            var sum = a.add(b);
+            System.out.println("  Vector sum example: " + sum);
+        } else {
+            System.out.println("  Vector API: SIMD supported on this CPU");
         }
         System.out.println();
     }
