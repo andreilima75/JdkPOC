@@ -3,6 +3,7 @@ package org.example;
 import jdk.incubator.vector.IntVector;
 import jdk.incubator.vector.VectorSpecies;
 
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -20,6 +21,7 @@ public class Jdk26Poc {
         lazyConstants();
         structuredConcurrency();
         vectorApiDemo();
+        finalFieldWarningDemo();
 
     }
 
@@ -89,13 +91,31 @@ public class Jdk26Poc {
         if (VectorSpecies.INT.preferred() != null) {
             var species = IntVector.SPECIES_PREFERRED;
             System.out.println("  Preferred vector length: " + species.length() + " ints");
-            var a = IntVector.fromArray(species, new int[]{1,2,3,4}, 0);
-            var b = IntVector.fromArray(species, new int[]{5,6,7,8}, 0);
+            var a = IntVector.fromArray(species, new int[]{1, 2, 3, 4}, 0);
+            var b = IntVector.fromArray(species, new int[]{5, 6, 7, 8}, 0);
             var sum = a.add(b);
             System.out.println("  Vector sum example: " + sum);
         } else {
             System.out.println("  Vector API: SIMD supported on this CPU");
         }
         System.out.println();
+    }
+
+    static void finalFieldWarningDemo() {
+        System.out.println("6. Final Field Mutation Warning:");
+        try {
+            var obj = new TestFinal();
+            Field f = TestFinal.class.getDeclaredField("value");
+            f.setAccessible(true);
+            f.set(obj, 999);
+            System.out.println("  Final mutated (warning expected in logs): " + obj.value);
+        } catch (Exception e) {
+            System.out.println("  Reflection demo: " + e.getMessage());
+        }
+        System.out.println();
+    }
+
+    static class TestFinal {
+        final int value = 42;
     }
 }
