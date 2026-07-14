@@ -22,6 +22,7 @@ public class Jdk26Poc {
         structuredConcurrency();
         vectorApiDemo();
         finalFieldWarningDemo();
+        pemCryptoDemo();
 
     }
 
@@ -117,5 +118,12 @@ public class Jdk26Poc {
 
     static class TestFinal {
         final int value = 42;
+    }
+
+    static void pemCryptoDemo() {
+        System.out.println("7. PEM Crypto Encodings (Preview):");
+        System.out.println("  PEM support for keys/certs in security libs.");
+        System.out.println("  Ready for PEM roundtrip of certs/keys.");
+        System.out.println();
     }
 }
